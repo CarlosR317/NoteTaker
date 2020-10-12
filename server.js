@@ -11,9 +11,16 @@ var jsonParser = bodyParser.json()
  
 let notes= []
 
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
 // API routes
+app.use(express.static(path.join(__dirname + "/public/index.html")));
+// app.use(express.static(path.join(__dirname + "/public/notes.html")));
+
 
 // GET /api/notes
+
 app.get("/api/notes", (req, res) => {
     return res.json(db);
 });
@@ -25,7 +32,11 @@ app.post("/api/notes", jsonParser, (req, res) => {
     notes.push(note)
     console.log(notes)
     //add old note array (from db.json) to the notes array
-     fs.writeFile("./Develop/db/db.json", JSON.stringify(notes), err => {
+    var read = fs.readFile(path.join(__dirname + "/Develop/db/db.json"), "utf8", err => {
+        if (err) console.log("Error writing file:", err);
+    });
+    notes.concat(read);
+     fs.writeFile(path.join(__dirname + "/Develop/db/db.json"), JSON.stringify(notes), err => {
          if (err) console.log("Error writing file:", err);
       }); 
       return res.end()
@@ -41,16 +52,16 @@ app.delete("/api/notes/:id", function (req, res) {
 });
 
 // HTML routes
-app.use(express.static("public"));
+
 // GET /notes = notes.html
 app.get("/notes", (req, res) => {
-    res.sendFile(path.join(__dirname, "Develop/public/notes.html"));
+    res.sendFile(path.join(__dirname + "/Develop/public/notes.html"));
 });
 
 // GET * = index.html
-// app.get("*", (req, res) => {
-//     res.sendFile(path.join(__dirname, "Develop/public/index.html"));
-// });
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname + "/Develop/public/index.html"));
+});
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}/`);
