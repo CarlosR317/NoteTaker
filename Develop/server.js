@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // API routes
-app.use(express.static(path.join(__dirname + "Develop/public/index.html")));
+app.use(express.static(path.join(__dirname, "Develop/public/index.html")));
 
 // GET /api/notes
 
@@ -51,6 +51,10 @@ app.delete("/api/notes/:id", function (req, res) {
 });
 
 // HTML routes
+
+app.get("/", function(req, res) {
+    res.json(path.join(__dirname, "/Develop/public/index.html"));
+  });
 
 app.use(express.static("public"));
 
