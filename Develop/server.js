@@ -1,7 +1,7 @@
 const path = require("path")
 const express = require("express");
 const app = express();
-const db = require("./db/db.json")
+const db = require("/Develop/db/db.json")
 const fs = require('fs');
 const bodyParser = require('body-parser')
 
@@ -26,9 +26,10 @@ app.get("/api/notes", (req, res) => {
 
 // POST /api/notes
 app.post("/api/notes", jsonParser, (req, res) => {
-     var note = req.body;
-    notes.push(note)
-    console.log(notes)
+     var noteEntry = req.body;
+     noteEntry.id = note.length+1;
+    notes.push(noteEntry)
+    console.log(notesEntry)
     //add old note array (from db.json) to the notes array
     var read = fs.readFile(path.join(__dirname + "/Develop/db/db.json"), "utf8", err => {
         if (err) console.log("Error writing file:", err);
